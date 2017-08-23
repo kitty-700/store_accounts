@@ -1,17 +1,16 @@
-//ÄÄÆÄÀÏ ½Ã ÆÄÀÏ ÀÌ¸§ °ü·Ã
+//ì»´íŒŒì¼ ì‹œ íŒŒì¼ ì´ë¦„ ê´€ë ¨
 #define LOAD_FILE_NAME \
-"Ãæµ¹  ¾Æ¶øÀÇ º½  ±× ÀÌÈÄ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
+"ì¶©ëŒ  ì•„ëì˜ ë´„  ê·¸ ì´í›„ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
 #define EXPORT_FILE_NAME \
-"Ãæµ¹  ¾Æ¶øÀÇ º½  ±× ÀÌÈÄ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
-/*¹èÆ÷¿ë ´õ¹Ì ÀÌ¸§À¸·Î ¾µ¸¸ÇÑ °Íµé
-"[tvN] ¹®Á¦Àû ³²ÀÚ.E126.170820.720p NEXT.mp4.torrent"
-"º£ÀÌ¿öÄ¡ SOS ÇØ»ó ±¸Á¶´ë Baywatch.2017.UNRATED.1080p.BluRay.x264.TrueHD.7.1.Atmos FGT.torrent"
-"ÀÚ°İÁö½É (Feat. ÀºÇÏ of ¿©ÀÚÄ£±¸).mp3"
-"Ãæµ¹  ¾Æ¶øÀÇ º½  ±× ÀÌÈÄ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
-"Æ¿ À§ ¹ÌÆ® ¾î°ÔÀÎ (Till We Meet Again, 2016) bluray SRT (ÀÚ¸·).zip"
-"AQ.alz"
+"ì¶©ëŒ  ì•„ëì˜ ë´„  ê·¸ ì´í›„ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
+/*ë°°í¬ìš© ë”ë¯¸ ì´ë¦„ìœ¼ë¡œ ì“¸ë§Œí•œ ê²ƒë“¤
+"[tvN] ë¬¸ì œì  ë‚¨ì.E126.170820.720p NEXT.mp4.torrent"
+"ë² ì´ì›Œì¹˜ SOS í•´ìƒ êµ¬ì¡°ëŒ€ Baywatch.2017.UNRATED.1080p.BluRay.x264.TrueHD.7.1.Atmos FGT.torrent"
+"ìê²©ì§€ì‹¬ (Feat. ì€í•˜ of ì—¬ìì¹œêµ¬).mp3"
+"ì¶©ëŒ  ì•„ëì˜ ë´„  ê·¸ ì´í›„ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
+"í‹¸ ìœ„ ë¯¸íŠ¸ ì–´ê²Œì¸ (Till We Meet Again, 2016) bluray SRT (ìë§‰).zip"
 */
-//ÄÄÆÄÀÏ ½Ã ¼³Á¤ °ü·Ã
+//ì»´íŒŒì¼ ì‹œ ì„¤ì • ê´€ë ¨
 #define ACTIVE_ENCODING TRUE
 #define ACTIVE_DECODING TRUE
 #define SHOW_ENCODING_PROCESS FALSE
@@ -28,8 +27,8 @@
 #define PASS_CHAR1 'a'
 
 #define USE_PASSWORD_IN_LOGIN FALSE
-#define THEN_PASSWORD "test version"
+#define THEN_PASSWORD "sdf"
 
-#define HELP_MESSAGE "roh ji hyun version"
+#define HELP_MESSAGE "hello world"
 
 #define SHOW_SOURCE TRUE
