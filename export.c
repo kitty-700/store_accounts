@@ -22,12 +22,14 @@ void Export_DB(DB * root)
 	srand((unsigned)time(NULL));
 
 #if ACTIVE_ENCODING
-	Write_Random_Byte(file_gate, LOOK_NORMALLY_CHAR, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
-	Write_Random_Byte(file_gate, ALPHABET_ONLY, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
-	Write_Random_Byte(file_gate, DIGIT_ONLY, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
-	Write_Random_Byte(file_gate, ALPHABET_ONLY, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
-	Write_Random_Byte(file_gate, DIGIT_ONLY, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
-	Write_Random_Byte(file_gate, ALPHABET_ONLY, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+#if GENERATE_JUNK_BYTE
+	Write_Random_Byte(file_gate, LOOK_NORMALLY_CHAR,	MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+	Write_Random_Byte(file_gate, ALPHABET_ONLY,				MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+	Write_Random_Byte(file_gate, DIGIT_ONLY,						MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+	Write_Random_Byte(file_gate, ALPHABET_ONLY,				MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+	Write_Random_Byte(file_gate, DIGIT_ONLY,						MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+	Write_Random_Byte(file_gate, ALPHABET_ONLY,				MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+#endif
 #endif
 	Write_Operator(file_gate, START_OP, START_PROGRAM);
 	while (SA != NULL)
@@ -38,16 +40,16 @@ void Export_DB(DB * root)
 		AE = SA->head;
 		while (AE != NULL)
 		{
-			Write_Operator(file_gate, START_OP, INPUT_ACCOUNT_ID);
+			Write_Operator(file_gate, START_OP, INPUT_ACCOUNT_ID);	//계정의 ID 저장
 			Wrtie_String(file_gate, AE->ID);
 			Write_Operator(file_gate, END_OP, (char)NULL);
 
-			Write_Operator(file_gate, START_OP, INPUT_ACCOUNT_PW);
+			Write_Operator(file_gate, START_OP, INPUT_ACCOUNT_PW);	//계정의 PW 저장
 			Wrtie_String(file_gate, AE->PW);
 			Write_Operator(file_gate, END_OP, (char)NULL);
 
-			Write_Operator(file_gate, START_OP, INPUT_ACCOUNT_CURRENT_UPDATE);
-			if (!strcmp(AE->Update_Time, NULL_MESSAGE))
+			Write_Operator(file_gate, START_OP, INPUT_ACCOUNT_CURRENT_UPDATE);	//계정의 업데이트 시각 저장
+			if (!strcmp(AE->Update_Time, NULL_MESSAGE))	//업데이트 시각 자동저장 기능을 구현하고 나서부터 이 부분은 필요없어졌다.
 				Write_Operator(file_gate, EMPTY_OP, (char)NULL);
 			else
 			{
@@ -55,9 +57,9 @@ void Export_DB(DB * root)
 				Write_Operator(file_gate, END_OP, (char)NULL);
 			}
 
-			Write_Operator(file_gate, START_OP, INPUT_ACCOUNT_MEMO);
-			if (!strcmp(AE->Memo, NULL_MESSAGE))
-				Write_Operator(file_gate, EMPTY_OP, (char)NULL);
+			Write_Operator(file_gate, START_OP, INPUT_ACCOUNT_MEMO);	//계정에 붙은 메모를 저장
+			if (!strcmp(AE->Memo, NULL_MESSAGE))	//메모가 없으면 NULL_MESSAGE를 저장하고
+				Write_Operator(file_gate, EMPTY_OP, (char)NULL);	//매크로로 정의된 EMPTY_OP를 저장한다.
 			else
 			{
 				Wrtie_String(file_gate, AE->Memo);
@@ -70,12 +72,14 @@ void Export_DB(DB * root)
 	}
 	Write_Operator(file_gate, START_OP, END_PROGRAM);
 #if ACTIVE_ENCODING
-	Write_Random_Byte(file_gate, LOOK_NORMALLY_CHAR, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
-	Write_Random_Byte(file_gate, ALPHABET_ONLY, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
-	Write_Random_Byte(file_gate, LOOK_NORMALLY_CHAR, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
-	Write_Random_Byte(file_gate, ALPHABET_ONLY, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
-	Write_Random_Byte(file_gate, DIGIT_ONLY, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
-	Write_Random_Byte(file_gate, LOOK_NORMALLY_CHAR, MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+#if GENERATE_JUNK_BYTE
+	Write_Random_Byte(file_gate, LOOK_NORMALLY_CHAR,	MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+	Write_Random_Byte(file_gate, ALPHABET_ONLY,				MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+	Write_Random_Byte(file_gate, LOOK_NORMALLY_CHAR,	MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+	Write_Random_Byte(file_gate, ALPHABET_ONLY,				MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+	Write_Random_Byte(file_gate, DIGIT_ONLY,						MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+	Write_Random_Byte(file_gate, LOOK_NORMALLY_CHAR,	MIN_OF_CREATE_JUNK_BYTES, MAX_OF_CREATE_JUNK_BYTES);
+#endif
 #endif
 	fclose(file_gate);
 	printf("\nexport() 성공 : 지점 [./%s]\n", EXPORT_FILE_NAME);

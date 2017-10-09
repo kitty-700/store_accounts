@@ -16,6 +16,7 @@ void What_Time_Is_It(char buffer_to_store_time[UPDATE_TIME_SIZE])
 	time_t timer = time(NULL);
 	struct tm t;
 	localtime_s(&t, &timer);
+	_UPDATE_TIME:
 	sprintf_s(buffer_to_store_time, UPDATE_TIME_SIZE, "%4d-%02d-%02d %02d:%02d:%02d",
 		t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec);
 }
@@ -36,9 +37,9 @@ void Show_Accounts_Relevant_Site_Number(DB * root, char buffer[COMMON_LENGTH])
 		Site_Account * SA = Find_SA_Through_Number(root, select);
 		if (SA == NOTHING_POINTER)
 			BEFORE_RETURN_PRINT_(MESSAGE_WRONG_INPUT(간단히 보기));
-		SET_COLOR(SITE_BASIC_COLOR);
+		SET_CONSOLE_COLOR(SITE_BASIC_COLOR);
 		printf("[%03d] %s    ( %d 계정 보유 중)\n", select, SA->Site_Name, SA->how_many_accounts);
-		SET_COLOR_DEFAULT;
+		SET_CONSOLE_COLOR_DEFAULT;
 		Show_AE(SA);
 	}
 	else
@@ -52,23 +53,14 @@ void Login()
 	printf("엔터 키를 눌러 종료합니다.\n");
 	if ((char)_getch() != PASS_CHAR1)
 		exit(0);
-	else
 #if USE_PASSWORD_IN_LOGIN
-	{
 		MAKE_BUFFER(password_input);
 		printf("Password > ");
-		SET_COLOR(ORDER_COLOR);
-		gets_s(password_input, ORDER_LENGTH);
-		SET_COLOR_DEFAULT;
+		SET_CONSOLE_COLOR(ORDER_COLOR);
+		Get_String_Without_Buffer_Overflow(password_input);
+		SET_CONSOLE_COLOR_DEFAULT;
 		if (strcmp(password_input, THEN_PASSWORD))
 			exit(0);
-		else
-			;
-	}
-#else
-	{
-		;
-	}
 #endif
 }
 int Ask_Continue(const char buffer[COMMON_LENGTH])
@@ -98,6 +90,7 @@ int Input_String_Then_Return_Integer(const char input_string[COMMON_LENGTH])
 	MAKE_BUFFER(buffer);
 	if (input_string[0] == (char)NULL)
 		return NO_INPUT;
+
 	int buffer_length = Check_String_and_Return_Filtered_Buffer(input_string, buffer);
 	if (buffer_length == (int)NOT_A_NUMBER)
 		return NOT_A_NUMBER;
@@ -157,12 +150,6 @@ int power(int a, int num)
 	if (num == 0)
 		return 1;
 	return a * power(a, num - 1);
-}
-void test_anyway_function()
-{
-	int result = 20;
-	for (int i = 0; i < 21999999; i++)
-		result += i;
 }
 int is_digit_char(char byte)
 {
@@ -251,7 +238,7 @@ void Quit_Program(DB * root)
 	exit(0);
 }
 
-Order_Type Convert_Orderset_to_Interger(char Order[COMMON_LENGTH])
+Order_Type Convert_Orderset_to_Constant(char Order[COMMON_LENGTH])
 {	//편의상 중요한 명령어를 먼저 배치했던 Operation_System()함수에서와는 달리
 	//strcmp 오버헤드를 줄이기 위해선 자주 쓰는 명령어를 먼저 배치한다.
 	if (Order[0] == (char)NULL)
@@ -262,18 +249,22 @@ Order_Type Convert_Orderset_to_Interger(char Order[COMMON_LENGTH])
 		ORDER_IS_("list show") ||
 		ORDER_IS_("site") || 
 		ORDER_IS_("s") || 
+		ORDER_IS_("*") ||
 		ORDER_IS_("show"))
 		return show_site_list;
 
 	if (Is_Start_with_Digit(Order))
 		return show_account_through_number;
 
-	if (ORDER_IS_("add") || 
+	if (ORDER_IS_("add") ||
+		ORDER_IS_("ad") ||
+		ORDER_IS_("+") ||
 		ORDER_IS_("a"))
 		return add_something;
 
 	if (ORDER_IS_("update") ||
 		ORDER_IS_("ud") ||
+		ORDER_IS_("/") ||
 		ORDER_IS_("u"))
 		return update_something;
 
@@ -282,11 +273,13 @@ Order_Type Convert_Orderset_to_Interger(char Order[COMMON_LENGTH])
 		ORDER_IS_("del") ||
 		ORDER_IS_("de") ||
 		ORDER_IS_("rm") ||
+		ORDER_IS_("-") ||
 		ORDER_IS_("d"))
 		return delete_something;
 
 	if (ORDER_IS_("cls") ||
 		ORDER_IS_("clear") ||
+		ORDER_IS_(".") ||
 		ORDER_IS_("c"))
 		return clear_display;
 
@@ -301,7 +294,7 @@ Order_Type Convert_Orderset_to_Interger(char Order[COMMON_LENGTH])
 	if (ORDER_IS_("export") ||
 		ORDER_IS_("save") ||
 		ORDER_IS_("\"save\"") ||
-		ORDER_IS_("x"))
+		ORDER_IS_("v"))
 		return export_data;
 
 	if (ORDER_IS_("exit") ||
@@ -336,5 +329,36 @@ Order_Type Convert_Orderset_to_Interger(char Order[COMMON_LENGTH])
 		ORDER_IS_("detail"))
 		return show_account_list;
 
+	if (ORDER_IS_("fuck"))
+	{
+		static int z_repeat = 0;
+		printf("what?");
+		for (int i = 0; i < z_repeat; i++)
+			printf("z");
+		printf("\n");
+		z_repeat++;
+	}
 	return undefined_order;
+}
+void Get_String_Without_Buffer_Overflow(char string[COMMON_LENGTH])
+{	//strcpy() 도 겸해서 안터지는 특수 버퍼로 입력을 받는다.
+	//gets 랑 달리 미리 입력받을 배열의 크기가 COMMON_LENGTH로 정해져있기 때문에 구현하기 쉽다.
+	//만일 크기가 변할 수 있는 입력을 받아야한다면 입력이 끝나고 난 후의 index 값에 따라 동적할당을 해주면 된다. (그래도 상한치는 필요)
+	int index=0;
+	while ((string[index] = getchar()) != '\n')
+	{
+		if(index < COMMON_LENGTH - 1)
+			index++;
+	}
+	string[index] = NULL;
+	return;
+}
+void Module_Test()
+{
+	char str[COMMON_LENGTH] = { 0 };
+	char str2[COMMON_LENGTH] = { 0 };
+	Get_String_Without_Buffer_Overflow(str);
+	Get_String_Without_Buffer_Overflow(str2);
+	printf("[%s]\n", str);
+	printf("[%s]\n", str2);
 }

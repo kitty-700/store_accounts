@@ -1,20 +1,24 @@
-//ì»´íŒŒì¼ ì‹œ íŒŒì¼ ì´ë¦„ ê´€ë ¨
+//ÄÄÆÄÀÏ ½Ã ÆÄÀÏ ÀÌ¸§ °ü·Ã
 #define LOAD_FILE_NAME \
-"ì¶©ëŒ  ì•„ëì˜ ë´„  ê·¸ ì´í›„ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
+"Ãæµ¹  ¾Æ¶øÀÇ º½  ±× ÀÌÈÄ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
 #define EXPORT_FILE_NAME \
-"ì¶©ëŒ  ì•„ëì˜ ë´„  ê·¸ ì´í›„ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
-/*ë°°í¬ìš© ë”ë¯¸ ì´ë¦„ìœ¼ë¡œ ì“¸ë§Œí•œ ê²ƒë“¤
-"[tvN] ë¬¸ì œì  ë‚¨ì.E126.170820.720p NEXT.mp4.torrent"
-"ë² ì´ì›Œì¹˜ SOS í•´ìƒ êµ¬ì¡°ëŒ€ Baywatch.2017.UNRATED.1080p.BluRay.x264.TrueHD.7.1.Atmos FGT.torrent"
-"ìê²©ì§€ì‹¬ (Feat. ì€í•˜ of ì—¬ìì¹œêµ¬).mp3"
-"ì¶©ëŒ  ì•„ëì˜ ë´„  ê·¸ ì´í›„ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
-"í‹¸ ìœ„ ë¯¸íŠ¸ ì–´ê²Œì¸ (Till We Meet Again, 2016) bluray SRT (ìë§‰).zip"
+"Ãæµ¹  ¾Æ¶øÀÇ º½  ±× ÀÌÈÄ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
+/*¹èÆ÷¿ë ´õ¹Ì ÀÌ¸§À¸·Î ¾µ¸¸ÇÑ °Íµé
+"[tvN] ¹®Á¦Àû ³²ÀÚ.E126.170820.720p NEXT.mp4.torrent"
+"º£ÀÌ¿öÄ¡ SOS ÇØ»ó ±¸Á¶´ë Baywatch.2017.UNRATED.1080p.BluRay.x264.TrueHD.7.1.Atmos FGT.torrent"
+"ÀÚ°İÁö½É (Feat. ÀºÇÏ of ¿©ÀÚÄ£±¸).mp3"
+"Ãæµ¹  ¾Æ¶øÀÇ º½  ±× ÀÌÈÄ Clash  2016  720p BRRip 850MB - MkvCage.torrent"
+"Æ¿ À§ ¹ÌÆ® ¾î°ÔÀÎ (Till We Meet Again, 2016) bluray SRT (ÀÚ¸·).zip"
 */
-//ì»´íŒŒì¼ ì‹œ ì„¤ì • ê´€ë ¨
+//ÄÄÆÄÀÏ ½Ã ¼³Á¤ °ü·Ã
+#define TEST_MODULE FALSE
+
 #define ACTIVE_ENCODING TRUE
 #define ACTIVE_DECODING TRUE
-#define SHOW_ENCODING_PROCESS FALSE
-#define SHOW_DECODING_PROCESS FALSE
+#define GENERATE_JUNK_BYTE TRUE	//¸ğ¸£´Â »ç¶÷ÀÌ ÆÄÀÏ¶Ñ²±À» ¿­¾úÀ» ¶§ ÇØ¼®ÇÏ±â ¾î·Æµµ·Ï.
+
+#define SHOW_ENCODING_PROCESS FALSE	//EXPORT_DEBUG ¿Í °ãÄ¡´Â ´À³¦
+#define SHOW_DECODING_PROCESS FALSE//IMPORT_DEBUG ¿Í °ãÄ¡´Â ´À³¦
 #define IMPORT_DEBUG FALSE
 #define EXPORT_DEBUG FALSE
 
@@ -24,11 +28,11 @@
 #define EXPORT_DELAY_SEC 1
 ////////////////////////////////////
 #define DO_LOGIN_PROCESS FALSE
-#define PASS_CHAR1 'a'
+#define PASS_CHAR1 'k'
 
 #define USE_PASSWORD_IN_LOGIN FALSE
-#define THEN_PASSWORD "sdf"
+#define THEN_PASSWORD "itty"
 
-#define HELP_MESSAGE "hello world"
+#define HELP_MESSAGE "½º¹ß½º¹ß"
 
 #define SHOW_SOURCE TRUE

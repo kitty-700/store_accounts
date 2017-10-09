@@ -22,8 +22,8 @@ typedef struct Change_What_Thing
 {
 	struct Change_What_Thing * next;
 	int change_operator;
-	char change_from[COMMON_LENGTH];
-	char change_to[COMMON_LENGTH];
+	char change_from[COMMON_LENGTH_EXTENDED];
+	char change_to[COMMON_LENGTH_EXTENDED];
 }Change_Something;
 
 typedef struct History

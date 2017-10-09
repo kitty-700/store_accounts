@@ -11,9 +11,9 @@ void Show_SA(const DB * root, const int present_what_section)
 		Site_Account * each_site = root->first_Site;
 		while (each_site != NULL)
 		{
-			SET_COLOR(SITE_BASIC_COLOR);
+			SET_CONSOLE_COLOR(SITE_BASIC_COLOR);
 			printf("[%03d] %s    ( %d 계정 보유 중)\n", count++, each_site->Site_Name, each_site->how_many_accounts);
-			SET_COLOR_DEFAULT;
+			SET_CONSOLE_COLOR_DEFAULT;
 			if (present_what_section == SITE_AND_ACCOUNTS)
 				Show_AE(each_site);
 			else if (present_what_section == SITE_ONLY)
@@ -32,10 +32,10 @@ void Show_AE(const Site_Account * SA)	// ls
 		Account_Element * each_account = SA->head;
 		while (each_account != NULL)
 		{
-			SET_COLOR(ACCOUNT_BASIC_COLOR);
+			SET_CONSOLE_COLOR(ACCOUNT_BASIC_COLOR);
 			printf("[%03d]\n", count++);
 			printf("    ID : %s\n", each_account->ID);
-			SET_COLOR_DEFAULT;
+			SET_CONSOLE_COLOR_DEFAULT;
 			printf("    PW : %s\n", each_account->PW);
 			printf("    UD : %s\n", each_account->Update_Time);
 			printf("    MM : %s\n", each_account->Memo);
@@ -59,25 +59,25 @@ int Select_SA_Number(DB * root, char general_message[COMMON_LENGTH], char active
 	{
 		if (STRING_INPUT(active_zero_message))
 		{
-			SET_COLOR(ACTIVE_ZERO_COLOR);
+			SET_CONSOLE_COLOR(ACTIVE_ZERO_COLOR);
 			printf("[%03d] -> %s\n", UNIVERSAL_ZERO, active_zero_message);
-			SET_COLOR_DEFAULT;
+			SET_CONSOLE_COLOR_DEFAULT;
 		}
 		Show_SA(root, SITE_ONLY);
 		if (STRING_INPUT(general_message))
 			printf("%s\n", general_message);
 	}
-	INPUT_SELECT;
+	INPUT_SELECT(select);
 	switch (select)
 	{
-	case NO_INPUT://아무 입력없이 엔터 치면
-		return NO_INPUT;
-	case NOT_A_NUMBER://숫자말고 딴거 입력했으면
-		return NOT_A_NUMBER;
-	default:
-		if (select > root->how_many_sites || select < 0) //숫자 입력했긴한데 범위를 벗어나면
-			return OUT_OF_RANGE;
-		return select;
+		case NO_INPUT://아무 입력없이 엔터 치면
+			return NO_INPUT;
+		case NOT_A_NUMBER://숫자말고 딴거 입력했으면
+			return NOT_A_NUMBER;
+		default:
+			if (select > root->how_many_sites || select < 0) //숫자 입력했긴한데 범위를 벗어나면
+				return OUT_OF_RANGE;
+			return select;
 	}
 }
 int Select_AE_Number(Site_Account * SA, char general_message[COMMON_LENGTH], char active_zero_message[COMMON_LENGTH], int is_show_AE)
@@ -90,15 +90,17 @@ int Select_AE_Number(Site_Account * SA, char general_message[COMMON_LENGTH], cha
 	{
 		if (STRING_INPUT(active_zero_message))
 		{
-			SET_COLOR(ACTIVE_ZERO_COLOR);
+			SET_CONSOLE_COLOR(ACTIVE_ZERO_COLOR);
 			printf("[%03d] -> %s\n", UNIVERSAL_ZERO, active_zero_message);
-			SET_COLOR_DEFAULT;
+			SET_CONSOLE_COLOR_DEFAULT;
 		}
 		Show_AE(SA);
 		if (STRING_INPUT(general_message))
 			printf("%s\n", general_message);
 	}
-	INPUT_SELECT;
+
+	INPUT_SELECT(select);
+
 	switch (select)
 	{
 		case NO_INPUT:
@@ -117,15 +119,17 @@ int Select_AE_Attribute(char general_message[COMMON_LENGTH], char active_zero_me
 	char * attribute_list[] = { "ID","PW","MM" };
 	if (STRING_INPUT(active_zero_message))
 	{
-		SET_COLOR(ACTIVE_ZERO_COLOR);
+		SET_CONSOLE_COLOR(ACTIVE_ZERO_COLOR);
 		printf("[%03d] -> %s\n", UNIVERSAL_ZERO, active_zero_message);
-		SET_COLOR_DEFAULT;
+		SET_CONSOLE_COLOR_DEFAULT;
 	}
 	for (int i = 0; i < sizeof(attribute_list) / sizeof(char*); i++)
 		printf("[%03d] -> %s 변경.\n", i + 1, attribute_list[i]);
 	if (STRING_INPUT(general_message))
 		printf("%s\n", general_message);
-	INPUT_SELECT;
+
+	INPUT_SELECT(select);
+
 	switch (select)
 	{
 		case NO_INPUT:
@@ -182,14 +186,14 @@ void Attach_SA_to_the_DB(Site_Account* SA_to_insert, DB* root)
 //Fill....() -> SA 혹은 AE의 개별적인 내용을 채워넣는다.
 Site_Account * Fill_the_SA_Form()
 {
-	char buffer[COMMON_LENGTH] = { 0 };
+	char site_name[COMMON_LENGTH] = { 0 };
 	printf("사이트 이름 입력 : ");
-	SET_COLOR(ORDER_COLOR);
-	gets_s(buffer, SITE_NAME_LENGTH);
-	SET_COLOR_DEFAULT;
-	if (NO_STRING_INPUT(buffer))
+	SET_CONSOLE_COLOR(ORDER_COLOR);
+	Get_String_Without_Buffer_Overflow(site_name);
+	SET_CONSOLE_COLOR_DEFAULT;
+	if (NO_STRING_INPUT(site_name))
 		return (Site_Account*)NO_INPUT;
-	if (IMPROPER_INPUT(buffer))
+	if (PROHIBITED_INPUT(site_name))
 		return (Site_Account*)SYSTEM_CHAR_INPUT;
 	Site_Account * new_SA = (Site_Account*)malloc(sizeof(Site_Account)); 
 	if (new_SA == (Site_Account*)NULL)
@@ -197,7 +201,7 @@ Site_Account * Fill_the_SA_Form()
 		free(new_SA);
 		return (Site_Account*)NOTHING_POINTER;
 	}
-	strcpy_s(new_SA->Site_Name, SITE_NAME_LENGTH, buffer);
+	strcpy_s(new_SA->Site_Name, SITE_NAME_LENGTH, site_name);
 	new_SA->how_many_accounts = 0;
 	new_SA->next = NULL;
 	new_SA->head = NULL;
@@ -209,29 +213,27 @@ Account_Element * Fill_the_AE_Form()
 	if (new_AE == NULL)
 		return NOTHING_POINTER;
 	char buffer[COMMON_LENGTH] = { 0 };
-	char * string_array[] = { "ID", "PW", "MM" };
-	for (int each_subject = 0; each_subject < sizeof(string_array) / sizeof(char*); each_subject++)
+	char * account_items[] = { "ID", "PW", "MM" };
+	for (int each_item = 0; each_item < sizeof(account_items) / sizeof(char*); each_item++)
 	{
-		printf("\t%s ? ",string_array[each_subject]);
-		SET_COLOR(ORDER_COLOR);
-		gets_s(buffer, COMMON_LENGTH);
-		SET_COLOR_DEFAULT;
+		printf("\t%s ? ",account_items[each_item]);
+
+		SET_CONSOLE_COLOR(ORDER_COLOR);
+		Get_String_Without_Buffer_Overflow(buffer);
+		SET_CONSOLE_COLOR_DEFAULT;
+
 		if (NO_STRING_INPUT(buffer))
-		{
-			if ((!strcmp(string_array[each_subject], "ID")) || (!strcmp(string_array[each_subject], "PW")))	//ID나 PW는 들어오지않으면 입력취소로 간주
+			if ((!strcmp(account_items[each_item], "ID")) || (!strcmp(account_items[each_item], "PW")))	//ID나 PW는 들어오지않으면 입력취소로 간주
 			{
 				free(new_AE);
 				return (Account_Element *)NO_INPUT;
 			}
-			else
-				;
-		}
-		if (IMPROPER_INPUT(buffer))
+		if (PROHIBITED_INPUT(buffer))
 		{
 			free(new_AE);
 			return (Account_Element *)SYSTEM_CHAR_INPUT;
 		}
-		switch (each_subject)
+		switch (each_item)
 		{
 		case 0:	//ID
 			strcpy_s(new_AE->ID, COMMON_LENGTH, buffer);
