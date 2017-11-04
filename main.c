@@ -56,7 +56,7 @@ void Operation_System(int * is_loaded, char Order[ORDER_LENGTH])
 		case show_account_through_number:		/*명령으로 숫자만 입력할 경우의 특수행동을 정의한다.
 			입력이 0일 경우는 case show_site_list : 와 같고, 
 			나머지는 해당 번호를 가진 사이트 계정들을 출력.  (범위 초과하면 아무것도 안 함)*/
-			Show_Accounts_Relevant_Site_Number(root, Order);
+			Show_Accounts_Through_Site_Number(root, Order);
 			break;
 
 		case	undefined_order:

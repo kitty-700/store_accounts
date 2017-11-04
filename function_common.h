@@ -1,7 +1,7 @@
 int Is_Buffer_Contain_Operator_Symbol(const char buffer[COMMON_LENGTH]);
 void What_Time_Is_It(char buffer_to_store_time[UPDATE_TIME_SIZE]);
 int Is_Start_with_Digit(const char buffer[COMMON_LENGTH]);
-void Show_Accounts_Relevant_Site_Number(DB * root, char buffer[COMMON_LENGTH]);
+void Show_Accounts_Through_Site_Number(DB * root, char buffer[COMMON_LENGTH]);
 void Login();
 int Ask_Continue(const char buffer[COMMON_LENGTH]);
 void Delay_n_Second_and_Print_Dots(int n_sec);
@@ -12,3 +12,5 @@ int is_digit_char(char byte);
 void Unload_History();
 void Unload_DB(DB * root);
 Order_Type Convert_Orderset_to_Constant(char buffer[COMMON_LENGTH]);
+void Get_String_Without_Buffer_Overflow(char string[COMMON_LENGTH]);
+void Module_Test();

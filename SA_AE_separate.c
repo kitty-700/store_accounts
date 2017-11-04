@@ -74,6 +74,8 @@ int Select_SA_Number(DB * root, char general_message[COMMON_LENGTH], char active
 			return NO_INPUT;
 		case NOT_A_NUMBER://숫자말고 딴거 입력했으면
 			return NOT_A_NUMBER;
+		case SELECT_LAST_SITE:
+			return SELECT_LAST_SITE;
 		default:
 			if (select > root->how_many_sites || select < 0) //숫자 입력했긴한데 범위를 벗어나면
 				return OUT_OF_RANGE;

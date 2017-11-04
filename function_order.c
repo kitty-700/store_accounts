@@ -19,7 +19,10 @@ void Add(DB * root)
 	MAKE_EXTENDED_BUFFER(history_record_2);
 	switch (select_in_first_page)
 	{
-		case COMMON_CANCEL_REASON(추가);
+		case NO_INPUT: 
+			BEFORE_RETURN_PRINT_(MESSAGE_NO_INPUT(추가)); 
+		case OUT_OF_RANGE: 
+			BEFORE_RETURN_PRINT_(MESSAGE_OUT_OF_RANGE(추가));
 		case MAKE_NEW_SITE:
 			new_SA = Fill_the_SA_Form();
 			if (new_SA == (Site_Account *)NO_INPUT)
@@ -35,24 +38,30 @@ void Add(DB * root)
 			History_Add(HISTORY_ADD, history_record_1, history_record_2);
 			BEFORE_RETURN_PRINT_(MESSAGE_SUCCESS(사이트 추가));
 			/*└함수 성공┘*/
-		default: //이미 존재하는 사이트를 선택했다면
-			new_SA = Find_SA_Through_Number(root, select_in_first_page);
+		default: //이미 존재하는 사이트 혹은 마지막 사이트를 선택했다면 선택한 사이트에 계정을 추가한다.
+			if (select_in_first_page == SELECT_LAST_SITE)	//특수한 경우로, 사이트 번호 입력 란에 "last"를 입력한다면 마지막 사이트를 지칭하는 것으로 한다.
+				new_SA = Find_SA_Through_Number(root, root->how_many_sites);
+			else
+				new_SA = Find_SA_Through_Number(root, select_in_first_page); 
+
 			if (new_SA == NOTHING_POINTER)
 				BEFORE_RETURN_PRINT_(MESSAGE_WRONG_INPUT(추가));
 			sprintf_s(history_record_1, COMMON_LENGTH_EXTENDED, "[%03d] %s 사이트에 계정 추가", select_in_first_page, new_SA->Site_Name);
 	}
 	__________PRINT_DEVIDE_LINE__________;
+	if (select_in_first_page == SELECT_LAST_SITE)
+		printf("\t마지막 사이트 선택 ( %s )\n",new_SA->Site_Name);
 	new_AE = Fill_the_AE_Form();	//계정 양식을 채운 뒤에 에러체크 하고 이에 따라 에러띄우거나 성공하거나 결정.
 	switch ((int)new_AE)
 	{
-	case NO_INPUT:
-		BEFORE_RETURN_PRINT_(MESSAGE_NO_INPUT(추가));
-	case SYSTEM_CHAR_INPUT:
-		BEFORE_RETURN_PRINT_(MESSAGE_SYSTEM_INVAIDING_INPUT(추가));
-	case NOTHING_POINTER:
-		BEFORE_RETURN_PRINT_(MESSAGE_UNKNOWN_ERROR(추가));
-	default:
-		break;
+		case NO_INPUT:
+			BEFORE_RETURN_PRINT_(MESSAGE_NO_INPUT(추가));
+		case SYSTEM_CHAR_INPUT:
+			BEFORE_RETURN_PRINT_(MESSAGE_SYSTEM_INVAIDING_INPUT(추가));
+		case NOTHING_POINTER:
+			BEFORE_RETURN_PRINT_(MESSAGE_UNKNOWN_ERROR(추가));
+		default:
+			break;
 	}
 	/*┌함수 성공┐*///-> 계정 추가 성공
 	Attach_AE_to_the_SA(new_AE, new_SA);
@@ -79,7 +88,7 @@ void Update(DB * root)
 		SHOW_LIST);
 	switch (select_in_first_page)
 	{
-		case COMMON_CANCEL_REASON(업데이트);
+		case COMMON_CANCEL_REASON_OF(업데이트);
 		case CANCEL_UPDATE:
 			BEFORE_RETURN_PRINT_(MESSAGE_CANCEL(업데이트));
 		default:
@@ -99,7 +108,7 @@ void Update(DB * root)
 		SHOW_LIST);
 	switch (select_in_second_page)
 	{
-		case COMMON_CANCEL_REASON(업데이트);
+		case COMMON_CANCEL_REASON_OF(업데이트);
 		case CHANGE_SITE_NAME:
 			//UNIVERSAL_ZERO == 0
 			printf("\tSite Name : %s -> ? ", to_be_updated_SA->Site_Name);
@@ -137,7 +146,7 @@ void Update(DB * root)
 		/*0번 선택시*/	"업데이트 작업 취소.");
 	switch (select_in_third_page)
 	{
-		case COMMON_CANCEL_REASON(업데이트);
+		case COMMON_CANCEL_REASON_OF(업데이트);
 		case CANCEL_UPDATE:
 			BEFORE_RETURN_PRINT_(MESSAGE_CANCEL(업데이트));
 		default:
@@ -209,7 +218,7 @@ void Delete(DB * root)
 		SHOW_LIST);
 	switch (select_in_first_page)
 	{
-		case COMMON_CANCEL_REASON(삭제);
+		case COMMON_CANCEL_REASON_OF(삭제);
 		case CANCEL_DELETE:
 			BEFORE_RETURN_PRINT_(MESSAGE_CANCEL(삭제));
 		default:
@@ -229,7 +238,7 @@ void Delete(DB * root)
 		SHOW_LIST);
 	switch (select_in_second_page)
 	{
-		case COMMON_CANCEL_REASON(삭제);
+		case COMMON_CANCEL_REASON_OF(삭제);
 		case DELETE_SITE:
 		{
 			if (Ask_Continue("삭제하시겠습니까 ?") == FALSE)
@@ -289,7 +298,7 @@ void Swap_Site_Order(DB * root)
 		SHOW_LIST);
 	switch (select_1)
 	{
-		case COMMON_CANCEL_REASON(교환);
+		case COMMON_CANCEL_REASON_OF(교환);
 		case CANCEL_SWAP:
 			BEFORE_RETURN_PRINT_(MESSAGE_CANCEL(교환));
 		default:
@@ -301,7 +310,7 @@ void Swap_Site_Order(DB * root)
 		DONT_SHOW_LIST);
 	switch (select_2)
 	{
-		case COMMON_CANCEL_REASON(교환);
+		case COMMON_CANCEL_REASON_OF(교환);
 		case CANCEL_SWAP:
 			BEFORE_RETURN_PRINT_(MESSAGE_CANCEL(교환));
 		default:
@@ -365,6 +374,7 @@ void Swap_Site_Order(DB * root)
 }
 void History_Add(int order_number, const char str_1[COMMON_LENGTH_EXTENDED], const char str_2[COMMON_LENGTH_EXTENDED])
 {	//1~2개의 문자열을 CS 구조체에 단순히 붙이는 정도
+	//171010 에러 : 두 COMMON_LENGTH의 문자열을 붙이는 경우가 있어 로그 기록에는 그 COMMON_LENGTH의 두배 이상으로 할당해야한다.
 	Change_Something * temp_CS = (Change_Something*)malloc(sizeof(Change_Something));
 	temp_CS->change_operator = order_number;
 	temp_CS->next = NULL;
@@ -373,6 +383,7 @@ void History_Add(int order_number, const char str_1[COMMON_LENGTH_EXTENDED], con
 		strcpy_s(temp_CS->change_from, COMMON_LENGTH_EXTENDED, str_1);
 	else
 		strcpy_s(temp_CS->change_from, COMMON_LENGTH_EXTENDED, "");
+
 	if (STRING_INPUT(str_2))
 		strcpy_s(temp_CS->change_to, COMMON_LENGTH_EXTENDED, str_2);
 	else
@@ -456,8 +467,14 @@ int How_To_Use_Operations()
 	printf("%-10s (c)\t:화면을 깨끗하게 지우기\n", "cls");
 	printf("%-10s (v)\t:모든 정보를 파일에 저장\n", "save");
 	printf("%-10s (q)\t:프로그램 종료\n", "exit");
-
+	printf("\n");
 	printf("보통의 상황에서 아무 입력도 안 하고 엔터를 누르면 작업취소를 의미합니다.\n");
 	printf("진행중인 작업을 취소하는 것이 이상한 데이터를 집어넣는 것보다 낫습니다.\n");
+	printf("\n");
+	printf("Tip. [Win + R] 단축키 (실행창) 를 통해 빠르게 실행하는 방법\n");
+	printf("\t\t환경변수 - 사용자변수 - Path 에 새로만들기 - 이 프로그램이 들어있는 폴더 경로를 추가\n");
+	printf("\t\t이 프로그램 이름을 \"accounts\"로 해두었다면 실행 창에서 \"account\"를 입력하면 바로 실행.\n");
+	printf("\n");
+	printf("명령어 \"c\" -> 화면 클리어.\n");
 	return 0;
 }

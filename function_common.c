@@ -27,7 +27,7 @@ int Is_Start_with_Digit(const char buffer[COMMON_LENGTH])
 	else
 		return TRUE;
 }
-void Show_Accounts_Relevant_Site_Number(DB * root, char buffer[COMMON_LENGTH])
+void Show_Accounts_Through_Site_Number(DB * root, char buffer[COMMON_LENGTH])
 {
 	int select = Input_String_Then_Return_Integer(buffer);
 	if (select == UNIVERSAL_ZERO)
@@ -85,12 +85,13 @@ void Delay_n_Second_and_Print_Dots(int n_sec)
 	}
 }
 int Input_String_Then_Return_Integer(const char input_string[COMMON_LENGTH])
-{
+{	//문자열을 입력하고 그게 만약 숫자로만 이루어진 경우 그 숫자를 정수로서 반환한다. ( 음수 제외 )
 	int result = 0;
 	MAKE_BUFFER(buffer);
 	if (input_string[0] == (char)NULL)
 		return NO_INPUT;
-
+	if (!strcmp(input_string, "last"))
+		return SELECT_LAST_SITE;
 	int buffer_length = Check_String_and_Return_Filtered_Buffer(input_string, buffer);
 	if (buffer_length == (int)NOT_A_NUMBER)
 		return NOT_A_NUMBER;
@@ -105,7 +106,6 @@ int Input_String_Then_Return_Integer(const char input_string[COMMON_LENGTH])
 		{
 			int each_number = buffer[i] - '0';
 			result += power(10, buffer_length - i - 1) * each_number;
-			//printf("each : %d , result : %d\n", each_number, result); //함수 만들 때 debug
 			i++;
 		}
 	}
@@ -280,7 +280,8 @@ Order_Type Convert_Orderset_to_Constant(char Order[COMMON_LENGTH])
 	if (ORDER_IS_("cls") ||
 		ORDER_IS_("clear") ||
 		ORDER_IS_(".") ||
-		ORDER_IS_("c"))
+		ORDER_IS_("c") ||
+		ORDER_IS_("\"c\""))
 		return clear_display;
 
 	if (ORDER_IS_("swap") ||
@@ -355,10 +356,4 @@ void Get_String_Without_Buffer_Overflow(char string[COMMON_LENGTH])
 }
 void Module_Test()
 {
-	char str[COMMON_LENGTH] = { 0 };
-	char str2[COMMON_LENGTH] = { 0 };
-	Get_String_Without_Buffer_Overflow(str);
-	Get_String_Without_Buffer_Overflow(str2);
-	printf("[%s]\n", str);
-	printf("[%s]\n", str2);
 }

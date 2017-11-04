@@ -46,6 +46,7 @@
 #define SO_BIG_TO_RETURN_INTEGER -4
 #define INTENDED_ZERO -5
 #define SYSTEM_CHAR_INPUT -6
+#define SELECT_LAST_SITE -7
 #define _NOT_A_NUMBER(X) ((X) > '9' || (X) < '0') 
 //시스템 조작 문자가 포함되었는지 검사
 #define PROHIBITED_INPUT(B) \
@@ -168,8 +169,8 @@ printf("===================================================\n")
 선택한 번호로 인해 명령이 취소되는 여러 경우를 매크로로 묶어서 정의해둠.
 입력이 없거나, 입력이 숫자가 아니거나, 유효한 범위가 아니거나.
 */
-#define COMMON_CANCEL_REASON(M) \
-		NO_INPUT: \
+#define COMMON_CANCEL_REASON_OF(M) \
+/*case*/ NO_INPUT: \
 BEFORE_RETURN_PRINT_(MESSAGE_NO_INPUT(M)); \
 case NOT_A_NUMBER: \
 BEFORE_RETURN_PRINT_(MESSAGE_INPUT_ISNT_NUMBER(M)); \

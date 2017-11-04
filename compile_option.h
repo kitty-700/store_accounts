@@ -1,8 +1,8 @@
 //컴파일 시 파일 이름 관련
 #define LOAD_FILE_NAME \
-"충돌  아랍의 봄  그 이후 Clash  2016  720p BRRip 850MB - MkvCage.torrent"
+"123.zip"
 #define EXPORT_FILE_NAME \
-"충돌  아랍의 봄  그 이후 Clash  2016  720p BRRip 850MB - MkvCage.torrent"
+"123.zip"
 /*배포용 더미 이름으로 쓸만한 것들
 "[tvN] 문제적 남자.E126.170820.720p NEXT.mp4.torrent"
 "베이워치 SOS 해상 구조대 Baywatch.2017.UNRATED.1080p.BluRay.x264.TrueHD.7.1.Atmos FGT.torrent"
@@ -13,8 +13,8 @@
 //컴파일 시 설정 관련
 #define TEST_MODULE FALSE
 
-#define ACTIVE_ENCODING TRUE
-#define ACTIVE_DECODING TRUE
+#define ACTIVE_ENCODING FALSE
+#define ACTIVE_DECODING FALSE
 #define GENERATE_JUNK_BYTE TRUE	//모르는 사람이 파일뚜껑을 열었을 때 해석하기 어렵도록.
 
 #define SHOW_ENCODING_PROCESS FALSE	//EXPORT_DEBUG 와 겹치는 느낌
